@@ -15,6 +15,6 @@
   tags: docker
 
 - name: start a kibana container
-  command: docker run -d -h kibana-{{ ansible_hostname }} -p=8080:80 -v {{ ext_kibana_volume }}/config.js:/kibana/src/config.js -name kibana gitinsky/kibana:0.1.0
+  command: docker run -d -h kibana-{{ ansible_hostname }} -p=8080:80 -v {{ ext_kibana_volume }}/config.js:/kibana/src/config.js -name kibana gitinsky/kibana:0.1.0 /usr/sbin/nginx -g "daemon off;"
   when: result.changed
   tags: docker
