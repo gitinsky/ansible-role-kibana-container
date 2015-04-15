@@ -29,7 +29,7 @@ function (Settings) {
      *  +elasticsearch: {server: "http://localhost:9200", withCredentials: true}+
      *
      */
-    elasticsearch: "http{{ 's' if kibana_dockerized_https_enabled }}://kibana.reviseapp.net/elasticsearch",
+    elasticsearch: "http{{ 's' if kibana_dockerized_https_enabled else '' }}://kibana.reviseapp.net/elasticsearch",
 
     /** @scratch /configuration/config.js/5
      *
