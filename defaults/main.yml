@@ -1,2 +1,3 @@
 ---
 kibana_dockerized_https_enabled: yes
+kibana_http_name: kibana.reviseapp.net
