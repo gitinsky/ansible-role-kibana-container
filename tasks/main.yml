@@ -1,39 +1,30 @@
 ---
 - name: create ext volume
   file: state=directory path={{ ext_kibana_volume }}
-  tags: docker
+  tags:
+    - docker
+    - kibana
 
 - name: put kibana config
   template: src=config.js dest={{ ext_kibana_volume }}/config.js
   register: kibana_config
-  tags: docker
-
-- name: check if kibana container is started
-  command: bash -c "docker ps | grep kibana"
-  failed_when: false
-  register: result
-  changed_when: "'kibana' not in result.stdout"
-  tags: docker
+  tags:
+    - docker
+    - kibana
 
 - name: start a kibana container
-  command: docker run -d -h kibana-{{ ansible_hostname }} -p=8080:80 -v {{ ext_kibana_volume }}/config.js:/kibana/src/config.js -name kibana gitinsky/kibana:0.1.0 /usr/sbin/nginx -g "daemon off;"
-  when: result.changed
-  tags: docker
-
-# - name: start a kibana container
-#   docker:
-#     image: gitinsky/kibana:0.1.0
-#     state: "{{ 'restarted' if kibana_config.changed else 'reloaded' }}"
-#     hostname: "kibana-{{ ansible_hostname }}"
-#     ports:
-#         - "8080:80"
-#         - "9300:9300"
-#     volumes:
-#       - "{{ ext_kibana_volume }}/config.js:/kibana/src/config.js"
-#     name: kibana
-#     command: /usr/sbin/nginx -g "daemon off;"
-#   tags:
-#     - docker
-#     - kibana
-
-# command: docker run -d -h kibana-{{ ansible_hostname }} -p=8080:80 -v {{ ext_kibana_volume }}/config.js:/kibana/src/config.js -name kibana gitinsky/kibana:0.1.0 /usr/sbin/nginx -g "daemon off;"
+  docker:
+    image: gitinsky/kibana:0.1.0
+    state: "{{ 'restarted' if kibana_config.changed else 'reloaded' }}"
+    hostname: "kibana-{{ ansible_hostname }}"
+    ports:
+        - "8080:80"
+        - "9300:9300"
+    volumes:
+      - "{{ ext_kibana_volume }}/config.js:/kibana/src/config.js"
+    name: kibana
+    restart_policy: always
+    command: /usr/sbin/nginx -g "daemon off;"
+  tags:
+    - docker
+    - kibana
