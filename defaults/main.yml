@@ -1,3 +1,4 @@
 ---
 kibana_dockerized_https_enabled: yes
 kibana_http_name: kibana.reviseapp.net
+elasticsearch_url: "http://{{ ansible_docker0.ipv4.address }}:9200"
